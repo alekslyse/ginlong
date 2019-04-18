@@ -138,9 +138,9 @@ class GinlongPlant():
     async def update_info(self):
         """Authenticate."""
         try:
-            async with async_timeout.timeout(5, loop=self._parent.self._loop):
+            async with async_timeout.timeout(5, loop=self._parent._loop):
                 params = {}
-                response = await self._parent._session.get(self._parent.self.base_url+'/cust/user/login', params=params)
+                response = await self._parent._session.get(self._parent.base_url+'/cust/user/login', params=params)
 
 
                 print(response)
