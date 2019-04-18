@@ -28,6 +28,7 @@ class Ginlong(object):
         self.user_id = None
 
         self.access_token = None
+        self.plant_id = None
 
 
 
@@ -64,3 +65,18 @@ class Ginlong(object):
         except (asyncio.TimeoutError, aiohttp.ClientError, socket.gaierror):
             _LOGGER.error("Can not load data from Ginlong API")
             raise exceptions.GinlongConnectionError
+
+    @property
+    def token(self):
+        """Return the token."""
+        return self.access_token
+
+    @property
+    def uid(self):
+        """Return the user id."""
+        return self.user_id
+
+    @property
+    def plant_id(self):
+        """Return the plant id."""
+        return self.plant_id
