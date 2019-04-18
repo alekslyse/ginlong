@@ -141,3 +141,13 @@ class Ginlong(object):
     def currentplant(self):
         """Return the plant id."""
         return self.plant_id
+
+    @property
+    def all_plants(self):
+        """Return all plants."""
+        return self.plants
+
+    @property
+    def get_single_plant(self, plantId):
+        """Return one plant."""
+        return self.plant[plantId]
