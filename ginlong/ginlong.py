@@ -13,7 +13,7 @@ API_ENDPOINT = 'http://apic-cdn.solarman.cn/v/ap.2.0'
 _LOGGER = logging.getLogger(__name__)
 
 
-class Ginlong(object):
+class Ginlong():
 
     def __init__(self, loop, session):
 
@@ -22,7 +22,9 @@ class Ginlong(object):
         self.data = {}
         self.plants = {}
         self.plant = []
+        self.plant_ids = []
         self.base_url = API_ENDPOINT
+        self.first_update_done = False
  
         
         self.username = None
@@ -31,6 +33,7 @@ class Ginlong(object):
 
         self.access_token = None
         self.plant_id = None
+        self._test = 123
 
 
 
@@ -71,9 +74,7 @@ class Ginlong(object):
 
         
 
-
-    async def get_plants(self):
-        """Get all power plants."""
+    async def update_info(self):
         try:
             async with async_timeout.timeout(5, loop=self._loop):
 
@@ -90,64 +91,55 @@ class Ginlong(object):
                 plants = await response.json(content_type=None)
                 _LOGGER.debug(self.plants)
 
-                self.plants = plants
-                return plants
-
-
-                
-
+                for plant in plants['list']:
+                    self.plant_ids.append(plant['plant_id'])
 
         except (asyncio.TimeoutError, aiohttp.ClientError, socket.gaierror):
             _LOGGER.error("Can not load data from Ginlong API")
             raise exceptions.GinlongConnectionError
 
+        
 
-    async def get_plant(self, plant_id):
-        """Get one power plant."""
-        try:
-            async with async_timeout.timeout(5, loop=self._loop):
-
-                headers = {'token': self.access_token}
-                params = {
-                    "uid": self.user_id,
-                    "plant_id": plant_id
-                }
-                response = await self._session.get(self.base_url+'/plant/get_plant_overview', params=params, headers=headers)
-            
-                _LOGGER.info(
-                    "Response from Ginlong API: %s", response.status)
-                plant = await response.json(content_type=None)
-                _LOGGER.debug(self.plants)
-
-                self.plant[plant[plant_id]]= plant
-                return plant
-
-        except (asyncio.TimeoutError, aiohttp.ClientError, socket.gaierror):
-            _LOGGER.error("Can not load data from Ginlong API")
-            raise exceptions.GinlongConnectionError
+        self.first_update_done = True
+        
 
 
     @property
-    def token(self):
-        """Return the token."""
-        return self.access_token
-
-    @property
-    def uid(self):
-        """Return the user id."""
-        return self.user_id
-
-    @property
-    def currentplant(self):
-        """Return the plant id."""
-        return self.plant_id
-
-    @property
-    def all_plants(self):
+    async def get_plants(self):
         """Return all plants."""
-        return self.plants
+        if (self.first_update_done == False):
+            await self.update_info()
+
+        return self.plants['list']
 
     @property
-    def get_single_plant(self, plantId):
+    def get_plant(self, plantId):
         """Return one plant."""
-        return self.plant[plantId]
+        if plantId not in self.plant_ids:
+            _LOGGER.error("Could not find any Plants with id: %s", plantId)
+            return None
+
+        if plantId not in self.plants.keys():
+            self.plants[plantId] = GinlongPlant(plantId, self)
+
+        return self.plants[plantId]
+
+class GinlongPlant():
+
+    def __init__(self, plant_id, parent):
+        """Initialize the Ginlong plnat class."""
+        self.plant_id = plant_id
+        self.name = None
+        self.current_production = None
+        self.token = parent._test
+
+
+    @property
+    async def name(self):
+        """Return all plants."""
+        return "Disney"
+
+    @property
+    async def test(self):
+        """Return all plants."""
+        return self.token
