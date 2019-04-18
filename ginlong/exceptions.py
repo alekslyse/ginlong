@@ -2,7 +2,7 @@
 """Exceptions for Ginlong API client."""
 
 
-class Ginlong(Exception):
+class GinlongError(Exception):
     """General Ginlong exception occurred."""
 
     pass

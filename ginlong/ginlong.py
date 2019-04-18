@@ -36,7 +36,7 @@ class Ginlong(object):
         try:
             async with async_timeout.timeout(5, loop=self._loop):
                 params = {'user_id': username, 'user_pass': password}
-                response = await self._session.get(self.base_url, params=params)
+                response = await self._session.get(self.base_url+'/cust/user/login', params=params)
             
             
             _LOGGER.info(
@@ -48,31 +48,3 @@ class Ginlong(object):
         except (asyncio.TimeoutError, aiohttp.ClientError, socket.gaierror):
             _LOGGER.error("Can not load data from Ginlong API")
             raise exceptions.GinlongConnectionError
-
-
-
-def urljoin(*parts):
-    """
-    Join terms together with forward slashes
-    Parameters
-    ----------
-    parts
-    Returns
-    -------
-    str
-    """
-    # first strip extra forward slashes (except http:// and the likes) and
-    # create list
-    part_list = []
-    for part in parts:
-        p = str(part)
-        if p.endswith('//'):
-            p = p[0:-1]
-        else:
-            p = p.strip('/')
-        part_list.append(p)
-    # join everything together
-    url = '/'.join(part_list)
-    return url
-
-
