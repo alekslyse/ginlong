@@ -96,8 +96,6 @@ class Ginlong():
                 for plant in plants['list']:
                     self.plant_ids.append(plant['plant_id'])
 
-                print(self.plant_ids)
-
 
         except (asyncio.TimeoutError, aiohttp.ClientError, socket.gaierror):
             _LOGGER.error("Can not load data from Ginlong API")
@@ -112,8 +110,7 @@ class Ginlong():
     @property
     def get_plants(self):
         """Return all plants."""
-        print(self.plants)
-        return self.plants['list']
+        return self.plant_ids
 
     @property
     def get_plant(self, plantId):
