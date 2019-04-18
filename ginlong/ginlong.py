@@ -94,7 +94,7 @@ class Ginlong():
                 
 
                 for plant in plants['list']:
-                    print(plant)
+                    print(plant['plant_id'])
 
         except (asyncio.TimeoutError, aiohttp.ClientError, socket.gaierror):
             _LOGGER.error("Can not load data from Ginlong API")
