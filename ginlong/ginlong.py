@@ -138,6 +138,6 @@ class Ginlong(object):
         return self.user_id
 
     @property
-    def plant(self):
+    def currentplant(self):
         """Return the plant id."""
         return self.plant_id
