@@ -72,11 +72,10 @@ class Ginlong(object):
         """Get all power plants."""
         try:
             async with async_timeout.timeout(5, loop=self._loop):
-                params = {'uid': self.user_id, 'sel_scope': 1, 'sort_type': 1}
-             
-                plants = await self._session.get(self.base_url+'/plant/find_plant_list', params=params)
+                params = {'user_id': 123, 'user_pass': 321}
+                response = await self._session.get(self.base_url+'/cust/user/login', params=params)
             
-                print(123)
+                print(response)
                 
 
 
