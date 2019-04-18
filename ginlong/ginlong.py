@@ -1,37 +1,27 @@
-import requests
-import datetime as dt
-from functools import wraps
-import pytz
-import numbers
+import asyncio
+import logging
+import socket
 
-__title__ = "ginlong"
-__version__ = "0.0.1"
-__author__ = "Aleksander Lyse"
-__license__ = "MIT"
+import aiohttp
+import async_timeout
 
-URLS = {
-    'baseUrl': 'http://apic-cdn.solarman.cn/v/ap.2.0'
-}
+from . import exceptions
 
+DEFAULT_TIMEOUT = 10
+API_ENDPOINT = 'http://apic-cdn.solarman.cn/v/ap.2.0'
 
-def authenticated(func):
-    """
-    Decorator to check if Smappee's access token has expired.
-    If it has, use the refresh token to request a new access token
-    """
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        self = args[0]
-        if self.refresh_token is not None and \
-           self.token_expiration_time <= dt.datetime.utcnow():
-            self.re_authenticate()
-        return func(*args, **kwargs)
-    return wrapper
+_LOGGER = logging.getLogger(__name__)
 
 
 class Ginlong(object):
 
-    def __init__(self):
+    def __init__(self, loop, session):
+
+        self._loop = loop
+        self._session = session
+        self.data = {}
+        self.base_url = API_ENDPOINT
+ 
         
         self.username = None
         self.password = None
@@ -41,123 +31,25 @@ class Ginlong(object):
 
 
 
-    def authenticate(self, username, password):
-
-        url = urljoin(URLS['baseUrl'], '/cust/user/login')
-        params = {
-
-            "user_id": username,
-            "user_pass": password
-        }
-        r = requests.get(url, params=params )
-        r.raise_for_status()
-        j = r.json()
-
-        print(j['result'] )
-        if int(j['result']) == 5:
-            raise InvalidLogin("Wrong password")
-
-        elif int(j['result']) == 11:
-            raise InvalidLogin("Wrong username")
-
-        elif int(j['result']) == 11:
-            raise InvalidLogin("Wrong username")
-        
-        elif 'token' not in j:
-            raise InvalidLogin("Unknown Error")
-
-        print(j)
-        self.access_token = j['token']
-        self.user_id = j['uid']
-        return r
-
- 
-
-        
+    async def authenticate(self, username, password):
+        """Authenticate."""
+        try:
+            async with async_timeout.timeout(5, loop=self._loop):
+                params = {'user_id': username, 'user_pass': password}
+                response = await self._session.get(self.base_url, params=params)
+            
+            
+            _LOGGER.info(
+                "Response from Ginlong API: %s", response.status)
+            self.data = await response.json()
+            _LOGGER.debug(self.data)
 
 
-    def get_powerplants(self):
+        except (asyncio.TimeoutError, aiohttp.ClientError, socket.gaierror):
+            _LOGGER.error("Can not load data from Ginlong API")
+            raise exceptions.GinlongConnectionError
 
-        url = urljoin(URLS['baseUrl'], '/plant/find_plant_list')
-        headers = { "token": self.access_token }
-        params = {
 
-            "uid": self.user_id,
-            "sel_scope": 1,
-            "sort_type": 1
-        }
-        r = requests.get(url, params=params, headers = headers )
-        r.raise_for_status()
-        return r.json()
-
-    def get_powerplant(self, plantId):
-
-        url = urljoin(URLS['baseUrl'], '/plant/get_plant_overview')
-        headers = { "token": self.access_token }
-        params = {
-
-            "uid": self.user_id,
-            "plant_id": plantId
-        }
-        r = requests.get(url, params=params, headers = headers )
-        r.raise_for_status()
-        return r.json()
-
-    def get_powerplant_devices(self, plantId):
-
-        url = urljoin(URLS['baseUrl'], '/plant/get_plant_device_list')
-        headers = { "token": self.access_token }
-        params = {
-
-            "uid": self.user_id,
-            "plant_id": plantId
-        }
-        r = requests.get(url, params=params, headers = headers )
-        r.raise_for_status()
-        return r.json()
-
-    def get_powerplant_inverter(self, plantId, deviceId):
-
-        url = urljoin(URLS['baseUrl'], '/device/doInverterDetail')
-        headers = { "token": self.access_token }
-        params = {
-
-            "uid": self.user_id,
-            "plant_id": plantId,
-            "deviceId": deviceId
-        }
-        r = requests.get(url, params=params, headers = headers )
-        r.raise_for_status()
-        return r.json()
-
-    def get_powerplant_logger(self, plantId, loggerID):
-
-        url = urljoin(URLS['baseUrl'], '/logger/get_logger_detail')
-        headers = { "token": self.access_token }
-        params = {
-
-            "uid": self.user_id,
-            "plant_id": plantId,
-            "gsn": loggerID
-        }
-        r = requests.get(url, params=params, headers = headers )
-        r.raise_for_status()
-        return r.json()
-
-    def get_powerplant_condition(self, plantID):
-
-        url = urljoin(URLS['baseUrl'], '/plant/get_plant_condition')
-        headers = { "token": self.access_token }
-        params = {
-
-            "uid": self.user_id,
-            "plant_id": plantID,
-            "cityCode": "",
-            "lan": "en"
-        }
-        r = requests.get(url, params=params, headers = headers )
-        r.raise_for_status()
-        return r.json()
 
 def urljoin(*parts):
     """
@@ -184,5 +76,3 @@ def urljoin(*parts):
     return url
 
 
-class InvalidLogin(Exception):
-    """Invalid login exception."""

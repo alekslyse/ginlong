@@ -7,7 +7,7 @@ with open("README.md", 'r') as fp:
 setup(
     name = 'pyGinlong',
     packages = ['ginlong'],
-    install_requires=['requests', 'pytz'],
+    install_requires=['aiohttp', 'async_timeout'],
     version='0.0.1',
     description='A python3 library to communicate with Ginling',
     long_description=long_description,
