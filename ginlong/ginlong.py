@@ -96,7 +96,7 @@ class Ginlong():
                 for plant in plants['list']:
                     self.plant_ids.append(plant['plant_id'])
 
-                print(plant_ids)
+                print(self.plant_ids)
 
 
         except (asyncio.TimeoutError, aiohttp.ClientError, socket.gaierror):
