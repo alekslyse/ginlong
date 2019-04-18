@@ -155,6 +155,8 @@ class GinlongPlant():
                     "Response from Ginlong API: %s", response.status)
                 plant = await response.json(content_type=None)
 
+                print(plant)
+
                 power_out = plant['power_out']
                 self.power_accumilitated = power_out['energy_accu']
                 self.power_day = power_out['energy_day']
