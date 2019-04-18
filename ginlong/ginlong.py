@@ -73,7 +73,7 @@ class Ginlong(object):
         try:
             async with async_timeout.timeout(5, loop=self._loop):
                 params = {'user_id': 123, 'user_pass': 321}
-                response = await self._session.get(self.base_url+'/cust/user/login', params=params)
+                response = await self._session.get(self.base_url+'/plant/find_plant_list', params=params)
             
                 print(response)
                 
