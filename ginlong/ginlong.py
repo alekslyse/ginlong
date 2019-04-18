@@ -105,10 +105,8 @@ class Ginlong():
 
 
     @property
-    async def get_plants(self):
+    def get_plants(self):
         """Return all plants."""
-        if (self.first_update_done == False):
-            await self.update_info()
 
         return self.plants['list']
 
