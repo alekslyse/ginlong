@@ -82,7 +82,7 @@ class Ginlong(object):
                 plants = await response.json(content_type=None)
                 _LOGGER.debug(self.data)
 
-                self.plants = plants
+              
 
                 print(plants)
                 return plants
