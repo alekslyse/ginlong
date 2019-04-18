@@ -143,7 +143,7 @@ class GinlongPlant():
                 response = await self._parent._session.get(self._parent.base_url+'/cust/user/login', params=params)
 
 
-                print(response)
+                print(self._parent.access_token)
         except (asyncio.TimeoutError, aiohttp.ClientError, socket.gaierror):
             _LOGGER.error("Can not load data from Ginlong API")
             raise exceptions.GinlongConnectionError
