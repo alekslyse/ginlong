@@ -161,6 +161,7 @@ class GinlongPlant():
                 self.power_accumilitated = power_out['energy_accu']
                 self.power_day = power_out['energy_day']
                 self.power = power_out['power']
+                self.name = plant['name']
 
 
         except (asyncio.TimeoutError, aiohttp.ClientError, socket.gaierror):
@@ -170,7 +171,7 @@ class GinlongPlant():
     @property
     def get_name(self):
         """Return all plants."""
-        return "Disney"
+        return self.name
     @property
     def get_power(self):
         """Return all plants."""
