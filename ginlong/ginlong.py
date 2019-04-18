@@ -84,7 +84,7 @@ class Ginlong(object):
 
               
 
-                print(plants)
+               
                 return plants
 
 
