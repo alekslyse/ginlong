@@ -107,7 +107,7 @@ class Ginlong():
     @property
     def get_plants(self):
         """Return all plants."""
-
+        print(self.plants)
         return self.plants['list']
 
     @property
