@@ -68,6 +68,8 @@ class Ginlong(object):
             _LOGGER.error("Can not load data from Ginlong API")
             raise exceptions.GinlongConnectionError
 
+        
+
 
     async def get_plants(self):
         """Get all power plants."""
@@ -92,6 +94,30 @@ class Ginlong(object):
 
                 
 
+
+        except (asyncio.TimeoutError, aiohttp.ClientError, socket.gaierror):
+            _LOGGER.error("Can not load data from Ginlong API")
+            raise exceptions.GinlongConnectionError
+
+
+    async def get_plant(self, plant_id):
+        """Get one power plant."""
+        try:
+            async with async_timeout.timeout(5, loop=self._loop):
+
+                headers = {'token': self.access_token}
+                params = {
+                    "uid": self.user_id,
+                    "plant_id": plant_id
+                }
+                response = await self._session.get(self.base_url+'/plant/get_plant_overview', params=params, headers=headers)
+            
+                _LOGGER.info(
+                    "Response from Ginlong API: %s", response.status)
+                plant = await response.json(content_type=None)
+                _LOGGER.debug(self.plants)
+
+                return plant
 
         except (asyncio.TimeoutError, aiohttp.ClientError, socket.gaierror):
             _LOGGER.error("Can not load data from Ginlong API")
