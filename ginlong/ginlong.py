@@ -192,3 +192,8 @@ class GinlongPlant():
     def get_test(self):
         """Return all plants."""
         return self.token
+
+    @property
+    def get_id(self):
+        """Return all plants."""
+        return self.plant_id
