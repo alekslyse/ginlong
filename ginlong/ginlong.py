@@ -21,6 +21,7 @@ class Ginlong(object):
         self._session = session
         self.data = {}
         self.plants = {}
+        self.plant = []
         self.base_url = API_ENDPOINT
  
         
@@ -89,6 +90,7 @@ class Ginlong(object):
                 plants = await response.json(content_type=None)
                 _LOGGER.debug(self.plants)
 
+                self.plants = plants
                 return plants
 
 
@@ -117,6 +119,7 @@ class Ginlong(object):
                 plant = await response.json(content_type=None)
                 _LOGGER.debug(self.plants)
 
+                self.plant[plant[plant_id]]= plant
                 return plant
 
         except (asyncio.TimeoutError, aiohttp.ClientError, socket.gaierror):
