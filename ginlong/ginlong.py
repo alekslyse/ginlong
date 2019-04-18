@@ -41,8 +41,24 @@ class Ginlong(object):
             
                 _LOGGER.info(
                     "Response from Ginlong API: %s", response.status)
-                self.data = await response.json(content_type=None)
+                auth = await response.json(content_type=None)
                 _LOGGER.debug(self.data)
+
+                if int(auth['result']) == 5:
+                    raise exceptions.InvalidLogin("Wrong password")
+
+                elif int(auth['result']) == 11:
+                    raise exceptions.InvalidLogin("Wrong username")
+
+                elif int(auth['result']) == 11:
+                    raise exceptions.InvalidLogin("Wrong username")
+                
+                elif 'token' not in auth:
+                    raise exceptions.InvalidLogin("Unknown Error")
+
+                self.access_token = auth['token']
+
+                return true
 
 
         except (asyncio.TimeoutError, aiohttp.ClientError, socket.gaierror):
