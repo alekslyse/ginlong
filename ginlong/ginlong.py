@@ -133,7 +133,20 @@ class GinlongPlant():
         self.name = None
         self.current_production = None
         self.token = parent._test
+        self._parent = parent
+        
+    async def authenticate(self, username, password):
+        """Authenticate."""
+        try:
+            async with async_timeout.timeout(5, loop=self._parent.self._loop):
+                params = {'user_id': username, 'user_pass': password}
+                response = await self._parent._session.get(self._parent.self.base_url+'/cust/user/login', params=params)
 
+
+                print(response)
+        except (asyncio.TimeoutError, aiohttp.ClientError, socket.gaierror):
+            _LOGGER.error("Can not load data from Ginlong API")
+            raise exceptions.GinlongConnectionError
 
     @property
     async def get_name(self):
