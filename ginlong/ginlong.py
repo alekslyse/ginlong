@@ -139,11 +139,21 @@ class GinlongPlant():
         """Authenticate."""
         try:
             async with async_timeout.timeout(5, loop=self._parent._loop):
-                params = {}
-                response = await self._parent._session.get(self._parent.base_url+'/cust/user/login', params=params)
+
+                headers = { "token": self._parent.access_token }
+
+                params = {
+                    "uid": self._parent.user_id,
+                    "plant_id": self.plant_id
+                }
+                response = await self._parent._session.get(self._parent.base_url+'/plant/get_plant_overview', params=params, headers=headers)
+
+                _LOGGER.info(
+                    "Response from Ginlong API: %s", response.status)
+                plant = await response.json(content_type=None)
 
 
-                print(self._parent.access_token)
+                print(plant)
         except (asyncio.TimeoutError, aiohttp.ClientError, socket.gaierror):
             _LOGGER.error("Can not load data from Ginlong API")
             raise exceptions.GinlongConnectionError
