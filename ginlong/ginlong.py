@@ -44,7 +44,7 @@ class Ginlong(object):
                 _LOGGER.info(
                     "Response from Ginlong API: %s", response.status)
                 auth = await response.json(content_type=None)
-                _LOGGER.debug(self.auth)
+                _LOGGER.debug(auth)
 
                 if int(auth['result']) == 5:
                     raise exceptions.InvalidLogin("Wrong password")
