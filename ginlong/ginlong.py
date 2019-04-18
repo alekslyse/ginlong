@@ -58,7 +58,7 @@ class Ginlong(object):
 
                 self.access_token = auth['token']
 
-                return true
+                return True
 
 
         except (asyncio.TimeoutError, aiohttp.ClientError, socket.gaierror):
