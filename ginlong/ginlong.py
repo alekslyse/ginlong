@@ -74,7 +74,7 @@ class Ginlong(object):
         try:
             async with async_timeout.timeout(5, loop=self._loop):
                 params = {
-                    "uid": self.user_id,
+                    "uid": 123,
                     "sel_scope": 1,
                     "sort_type": 1
                 }
