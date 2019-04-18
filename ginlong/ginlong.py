@@ -77,15 +77,7 @@ class Ginlong(object):
                 response = await self._session.get(self.base_url+'/plant/find_plant_list', params=params, headers=headers)
             
             
-                _LOGGER.info(
-                    "Response from Ginlong API - Plants: %s", response.status)
-                plants = await response.json(content_type=None)
-                _LOGGER.debug(self.data)
-
-              
-
-               
-                return plants
+                
 
 
         except (asyncio.TimeoutError, aiohttp.ClientError, socket.gaierror):
