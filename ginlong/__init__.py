@@ -1,1 +1,1 @@
-from .ginlong import Ginlong, __version__
+from .ginlong import Ginlong
