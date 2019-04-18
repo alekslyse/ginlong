@@ -39,10 +39,10 @@ class Ginlong(object):
                 response = await self._session.get(self.base_url+'/cust/user/login', params=params)
             
             
-            _LOGGER.info(
-                "Response from Ginlong API: %s", response.status)
-            self.data = await response.json()
-            _LOGGER.debug(self.data)
+                _LOGGER.info(
+                    "Response from Ginlong API: %s", response.status)
+                self.data = await response.json(content_type=None)
+                _LOGGER.debug(self.data)
 
 
         except (asyncio.TimeoutError, aiohttp.ClientError, socket.gaierror):
