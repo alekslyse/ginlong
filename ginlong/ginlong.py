@@ -91,7 +91,7 @@ class Ginlong():
                 plants = await response.json(content_type=None)
                 _LOGGER.debug(self.plants)
 
-                print(plants)
+                print(plants['list'])
 
                 for plant in plants['list']:
                     self.plant_ids.append(plant['plant_id'])
