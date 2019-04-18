@@ -78,12 +78,13 @@ class Ginlong(object):
             
             
                 _LOGGER.info(
-                    "Response from Ginlong API: %s", response.status)
+                    "Response from Ginlong API - Plants: %s", response.status)
                 plants = await response.json(content_type=None)
                 _LOGGER.debug(self.data)
 
                 self.plants = plants
 
+                print(plants)
                 return plants
 
 
