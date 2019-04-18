@@ -106,23 +106,24 @@ class Ginlong():
         self.first_update_done = True
         
 
+    async def get_plant(self, plant_id):
+        """Return one plant."""
+        if plant_id not in self.plant_ids:
+            _LOGGER.error("Could not find any Plants with id: %s", plant_id)
+            return None
+
+        if plant_id not in self.plants.keys():
+            self.plants[plant_id] = GinlongPlant(plant_id, self)
+
+        return self.plants[plant_id]
+
+    
 
     @property
     def get_plants(self):
         """Return all plants."""
         return self.plant_ids
-
-    @property
-    def get_plant(self, plantId):
-        """Return one plant."""
-        if plantId not in self.plant_ids:
-            _LOGGER.error("Could not find any Plants with id: %s", plantId)
-            return None
-
-        if plantId not in self.plants.keys():
-            self.plants[plantId] = GinlongPlant(plantId, self)
-
-        return self.plants[plantId]
+    
 
 class GinlongPlant():
 
