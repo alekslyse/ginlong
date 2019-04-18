@@ -52,9 +52,28 @@ class Ginlong(object):
         r = requests.get(url, params=params )
         r.raise_for_status()
         j = r.json()
+
+        print(j['result'] )
+        if int(j['result']) == 5:
+            raise InvalidLogin("Wrong password")
+
+        elif int(j['result']) == 11:
+            raise InvalidLogin("Wrong username")
+
+        elif int(j['result']) == 11:
+            raise InvalidLogin("Wrong username")
+        
+        elif 'token' not in j:
+            raise InvalidLogin("Unknown Error")
+
+        print(j)
         self.access_token = j['token']
         self.user_id = j['uid']
         return r
+
+ 
+
+        
 
 
     def get_powerplants(self):
@@ -163,3 +182,7 @@ def urljoin(*parts):
     # join everything together
     url = '/'.join(part_list)
     return url
+
+
+class InvalidLogin(Exception):
+    """Invalid login exception."""
