@@ -134,6 +134,9 @@ class GinlongPlant():
         self.current_production = None
         self.token = parent._test
         self._parent = parent
+        self.power_accumilitated = None
+        self.power_day = None
+        self.power = None
         
     async def update_info(self):
         """Authenticate."""
@@ -152,18 +155,37 @@ class GinlongPlant():
                     "Response from Ginlong API: %s", response.status)
                 plant = await response.json(content_type=None)
 
+                power_out = plant['power_out']
+                self.power_accumilitated = power_out['energy_accu']
+                self.power_day = power_out['energy_day']
+                self.power = power_out['power']
 
-                print(plant)
+
         except (asyncio.TimeoutError, aiohttp.ClientError, socket.gaierror):
             _LOGGER.error("Can not load data from Ginlong API")
             raise exceptions.GinlongConnectionError
 
     @property
-    async def get_name(self):
+    def get_name(self):
         """Return all plants."""
         return "Disney"
+    @property
+    def get_power(self):
+        """Return all plants."""
+        return self.power
 
     @property
-    async def get_test(self):
+    def get_accumulated(self):
+        """Return all plants."""
+        return self.power_accumilitated
+
+    @property
+    def get_total_power_day(self):
+        """Return all plants."""
+        return self.power_day
+
+
+    @property
+    def get_test(self):
         """Return all plants."""
         return self.token
