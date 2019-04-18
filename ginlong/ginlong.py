@@ -91,10 +91,10 @@ class Ginlong():
                 plants = await response.json(content_type=None)
                 _LOGGER.debug(self.plants)
 
-                print(plants['list'])
+                
 
                 for plant in plants['list']:
-                    self.plant_ids.append(plant['plant_id'])
+                    print(plant)
 
         except (asyncio.TimeoutError, aiohttp.ClientError, socket.gaierror):
             _LOGGER.error("Can not load data from Ginlong API")
