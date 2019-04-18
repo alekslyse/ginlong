@@ -59,6 +59,7 @@ class Ginlong(object):
                     raise exceptions.InvalidLogin("Unknown Error")
 
                 self.access_token = auth['token']
+                self.user_od = auth['uid']
 
                 return True
 
@@ -72,7 +73,11 @@ class Ginlong(object):
         """Get all power plants."""
         try:
             async with async_timeout.timeout(5, loop=self._loop):
-                params = {'user_id': 123, 'user_pass': 321}
+                params = {
+                    "uid": self.user_id,
+                    "sel_scope": 1,
+                    "sort_type": 1
+                }
                 response = await self._session.get(self.base_url+'/plant/find_plant_list', params=params)
             
                 print(response)
