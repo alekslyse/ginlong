@@ -136,11 +136,11 @@ class GinlongPlant():
 
 
     @property
-    async def name(self):
+    async def get_name(self):
         """Return all plants."""
         return "Disney"
 
     @property
-    async def test(self):
+    async def get_test(self):
         """Return all plants."""
         return self.token
