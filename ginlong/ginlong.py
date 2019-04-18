@@ -135,11 +135,11 @@ class GinlongPlant():
         self.token = parent._test
         self._parent = parent
         
-    async def authenticate(self, username, password):
+    async def update_info(self):
         """Authenticate."""
         try:
             async with async_timeout.timeout(5, loop=self._parent.self._loop):
-                params = {'user_id': username, 'user_pass': password}
+                params = {}
                 response = await self._parent._session.get(self._parent.self.base_url+'/cust/user/login', params=params)
 
 
